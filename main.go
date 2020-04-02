@@ -103,9 +103,9 @@ func getCNIPv4Cidr(url string) (cnIPv4CidrList []string, err error) {
 		return nil, err
 	}
 
-	cnIPv4CidrList := strings.Split(body, "\n")
+	cnIPv4CidrList = strings.Split(string(body), "\n")
+	fmt.Println("The length of cnIPv4CIDRList is", len(cnIPv4CidrList))
 
-	fmt.Println(cnIPv4CidrList)
 	return cnIPv4CidrList, nil
 }
 
@@ -121,7 +121,6 @@ func changeCNIPv4Cidr(url string, m map[string]string, list map[string][]*router
 	}
 
 	for _, cnIPv4Cidr := range cnIPv4CidrList {
-		fmt.Println(strings.TrimSpace(cnIPv4Cidr))
 		cnIPv4Cidr, err := conf.ParseIP(strings.TrimSpace(cnIPv4Cidr))
 		if err != nil {
 			return err
@@ -147,7 +146,7 @@ func main() {
 		fmt.Println("Error loading IPv4 file:", err)
 		return
 	}
-	if err := changeCNIPv4Cidr(cnIPv4CIDRURL, ccMap, cidrList); err != nil {
+	if err := changeCNIPv4Cidr(*cnIPv4CIDRURL, ccMap, cidrList); err != nil {
 		fmt.Println("Error loading cnIPv4CIDR data:", err)
 		return
 	}
